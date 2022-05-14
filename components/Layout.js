@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-
 import Header from './Header';
 import Footer from './Footer';
+import Showcase from './Showcase';
 import styles from '@/styles/Layout.module.css';
 
 const Layout = ({ title, keywords, description, children }) => {
@@ -15,10 +15,13 @@ const Layout = ({ title, keywords, description, children }) => {
 				<meta name='description' content={description} />
 				<meta name='keywords' content={keywords} />
 			</Head>
-			<Header></Header>
-			{/* {router.pathname === '/' && <Showcase />} */}
+
+			<Header />
+
+			{router.pathname === '/' && <Showcase />}
+
 			<div className={styles.container}>{children}</div>
-			<Footer></Footer>
+			<Footer />
 		</div>
 	);
 };
@@ -28,5 +31,4 @@ Layout.defaultProps = {
 	description: 'Find the latest DJ and other musical events',
 	keywords: 'music, dj, edm, events',
 };
-
 export default Layout;
