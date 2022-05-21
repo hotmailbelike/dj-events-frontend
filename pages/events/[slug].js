@@ -7,6 +7,8 @@ import { API_URL } from '@/config/config';
 import styles from '@/styles/Event.module.css';
 
 const EventPage = ({ event }) => {
+	event = { id: event.id, ...event.attributes };
+
 	const deleteEvent = () => {
 		console.log('Delete function called');
 	};
@@ -26,12 +28,16 @@ const EventPage = ({ event }) => {
 				</div>
 
 				<span>
-					{event.date} at {event.time}
+					{new Date(event.date).toLocaleDateString('en-UK')} at {event.time}
 				</span>
 				<h1>{event.name}</h1>
 				{event.image && (
 					<div className={styles.image}>
-						<Image src={event.image} width={960} height={600}></Image>
+						<Image
+							src={event.image.data.attributes.formats.medium.url}
+							width={960}
+							height={600}
+						></Image>
 					</div>
 				)}
 
@@ -54,7 +60,7 @@ export const getStaticPaths = async () => {
 	const res = await fetch(`${API_URL}/api/events`);
 	const events = await res.json();
 
-	const paths = events.map((event) => ({ params: { slug: event.slug } }));
+	const paths = events.data.map((event) => ({ params: { slug: event.attributes.slug } }));
 
 	return {
 		paths,
@@ -64,11 +70,11 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params: { slug } }) => {
-	const res = await fetch(`${API_URL}/api/events/${slug}`);
+	const res = await fetch(`${API_URL}/api/events?populate=*&filters[slug][$eq]=${slug}`);
 	const events = await res.json();
 
 	return {
-		props: { event: events[0] },
+		props: { event: events.data[0] },
 		revalidate: 1,
 	};
 };

@@ -9,18 +9,18 @@ const EventsPage = ({ events }) => {
 			{events.length === 0 && <h3>No Event to show</h3>}
 
 			{events.map((event) => (
-				<EventItem key={event.id} event={event}></EventItem>
+				<EventItem key={event.id} event={event.attributes}></EventItem>
 			))}
 		</Layout>
 	);
 };
 
 export const getServerSideProps = async () => {
-	const res = await fetch(`${API_URL}/api/events`);
+	const res = await fetch(`${API_URL}/api/events?populate=*&sort[0]=date:asc`);
 	const events = await res.json();
 
 	return {
-		props: { events: events.slice(0, 3) },
+		props: { events: events.data },
 	};
 };
 
