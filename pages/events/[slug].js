@@ -29,13 +29,13 @@ const EventPage = ({ event }) => {
 				</div>
 
 				<span>
-					{new Date(event.date).toLocaleDateString('en-UK')} at {event.time}
+					{new Date(event.date).toLocaleDateString('en-US')} at {event.time}
 				</span>
 				<h1>{event.name}</h1>
-				{event.image && (
+				{event?.image?.data?.attributes?.formats.medium.url && (
 					<div className={styles.image}>
 						<Image
-							src={event.image.data.attributes.formats.medium.url}
+							src={event.image.data.attributes.formats.medium.url || ''}
 							width={960}
 							height={600}
 						></Image>

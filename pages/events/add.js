@@ -43,7 +43,7 @@ const AddEventPage = () => {
 				return toast.error('Something went wrong');
 			} else {
 				const event = await res.json();
-				router.push(`/events/${event.data.slug}`);
+				router.push(`/events/${event.data.attributes.slug}`);
 			}
 		} catch (error) {
 			console.error('🚀 -> file: add.js -> line 49 -> handleSubmit -> error', error);
