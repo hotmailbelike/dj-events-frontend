@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import Layout from '@/components/Layout';
 import EventItem from '@/components/EventItem';
 import { API_URL } from '@/config/config';
@@ -16,7 +18,12 @@ const EventsPage = ({ events }) => {
 };
 
 export const getServerSideProps = async () => {
-	const res = await fetch(`${API_URL}/api/events?populate=*&sort[0]=date:asc`);
+	const query = qs.stringify({
+		populate: '*',
+		sort: ['date:asc'],
+	});
+
+	const res = await fetch(`${API_URL}/api/events?${query}`);
 	const events = await res.json();
 
 	return {

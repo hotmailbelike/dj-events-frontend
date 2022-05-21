@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import qs from 'qs';
+
 import Layout from '@/components/Layout';
 import EventItem from '@/components/EventItem';
 import { API_URL } from '@/config/config';
@@ -23,9 +25,13 @@ const HomePage = ({ events }) => {
 };
 
 export const getServerSideProps = async () => {
-	const res = await fetch(
-		`${API_URL}/api/events?populate=*&sort[0]=date:asc&pagination[start]=0&pagination[limit]=3`
-	);
+	const query = qs.stringify({
+		populate: '*',
+		sort: ['date:asc'],
+		pagination: { start: 0, limit: 3 },
+	});
+
+	const res = await fetch(`${API_URL}/api/events?${query}`);
 	const events = await res.json();
 
 	return {

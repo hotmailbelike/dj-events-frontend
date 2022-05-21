@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
+import qs from 'qs';
 
 import Layout from '@/components/Layout';
 import { API_URL } from '@/config/config';
@@ -70,7 +71,16 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params: { slug } }) => {
-	const res = await fetch(`${API_URL}/api/events?populate=*&filters[slug][$eq]=${slug}`);
+	const query = qs.stringify({
+		populate: '*',
+		filters: {
+			slug: {
+				$eq: slug,
+			},
+		},
+	});
+
+	const res = await fetch(`${API_URL}/api/events?${query}`);
 	const events = await res.json();
 
 	return {
