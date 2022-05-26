@@ -8,7 +8,7 @@ const EventItem = ({ event }) => {
 			<div className={styles.img}>
 				<Image
 					src={
-						event.image
+						event?.image?.data?.attributes?.formats?.thumbnail.url
 							? event.image.data.attributes.formats.thumbnail.url
 							: '/images/event-default.png'
 					}
