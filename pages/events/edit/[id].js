@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,6 +10,7 @@ import { FaImage } from 'react-icons/fa';
 
 import Layout from '@/components/Layout';
 import Modal from '@/components/Modal';
+import ImageUpload from '@/components/ImageUpload';
 import { API_URL } from '@/config/config';
 import styles from '@/styles/Form.module.css';
 
@@ -17,6 +18,7 @@ const EditEventPage = ({ event }) => {
 	const router = useRouter();
 
 	const [values, setValues] = useState({
+		id: event.id,
 		name: event.name,
 		description: event.description,
 		performers: event.performers,
@@ -24,13 +26,35 @@ const EditEventPage = ({ event }) => {
 		address: event.address,
 		date: event.date,
 		time: event.time,
+		image: event.image || {},
 	});
+
+	useEffect(() => {
+		console.log('🚀 -> file: [id].js -> line 31 -> EditEventPage -> values', values);
+
+		return () => {};
+	}, [values]);
 
 	const [imagePreview, setImagePreview] = useState(
 		event?.image?.data?.attributes.formats.thumbnail.url || ''
 	);
 
 	const [showModal, setShowModal] = useState(false);
+
+	const imageUploaded = async (imageObj) => {
+		setImagePreview(imageObj.formats.thumbnail.url);
+		setValues({
+			...values,
+			['image']: {
+				data: {
+					id: imageObj.id,
+					attributes: imageObj,
+				},
+			},
+		});
+
+		setShowModal(false);
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -49,6 +73,7 @@ const EditEventPage = ({ event }) => {
 				},
 				body: JSON.stringify({ data: values }),
 			});
+			console.log('🚀 -> file: [id].js -> line 70 -> handleSubmit -> res', res);
 
 			if (!res.ok) {
 				return toast.error('Something went wrong');
@@ -163,7 +188,7 @@ const EditEventPage = ({ event }) => {
 			</div>
 
 			<Modal show={showModal} onClose={() => setShowModal(false)}>
-				Upload Image
+				<ImageUpload eventId={event.id} imageUploaded={imageUploaded}></ImageUpload>
 			</Modal>
 		</Layout>
 	);
