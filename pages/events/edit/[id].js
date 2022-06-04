@@ -9,6 +9,7 @@ import qs from 'qs';
 import { FaImage } from 'react-icons/fa';
 
 import Layout from '@/components/Layout';
+import Modal from '@/components/Modal';
 import { API_URL } from '@/config/config';
 import styles from '@/styles/Form.module.css';
 
@@ -28,6 +29,8 @@ const EditEventPage = ({ event }) => {
 	const [imagePreview, setImagePreview] = useState(
 		event?.image?.data?.attributes.formats.thumbnail.url || ''
 	);
+
+	const [showModal, setShowModal] = useState(false);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -154,10 +157,14 @@ const EditEventPage = ({ event }) => {
 			)}
 
 			<div>
-				<button className='btn-secondary'>
+				<button onClick={() => setShowModal(true)} className='btn-secondary'>
 					<FaImage></FaImage> Set Image
 				</button>
 			</div>
+
+			<Modal show={showModal} onClose={() => setShowModal(false)}>
+				Upload Image
+			</Modal>
 		</Layout>
 	);
 };
