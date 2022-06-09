@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { API_URL } from '@/config/config';
+import { NEXT_URL } from '@/config/config';
 
 const AuthContext = createContext();
 
@@ -18,11 +18,25 @@ export const AuthProvider = ({ children }) => {
 
 	// login user
 	const login = async ({ email: identifier, password }) => {
-		console.log(
-			'🚀 -> file: AuthContext.js -> line 21 -> login -> email,password',
-			identifier,
-			password
-		);
+		try {
+			const res = await fetch(`${NEXT_URL}/api/login`, {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ identifier, password }),
+			});
+
+			const data = await res.json();
+			if (res.ok) {
+				setUser(data.user);
+			} else {
+				setError(data.message);
+				// setError(null);
+			}
+		} catch (error) {
+			console.error('🚀 -> file: AuthContext.js -> line 24 -> login -> error', error);
+		}
 	};
 
 	// logout user
