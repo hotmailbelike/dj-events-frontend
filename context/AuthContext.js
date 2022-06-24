@@ -31,8 +31,7 @@ export const AuthProvider = ({ children }) => {
 			if (res.ok) {
 				setUser(data.user);
 			} else {
-				setError(data.message);
-				// setError(null);
+				setError(data.error);
 			}
 		} catch (error) {
 			console.error('🚀 -> file: AuthContext.js -> line 24 -> login -> error', error);
@@ -57,6 +56,7 @@ export const AuthProvider = ({ children }) => {
 				register,
 				login,
 				logout,
+				setError,
 			}}
 		>
 			{children}
