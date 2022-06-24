@@ -16,10 +16,25 @@ export const AuthProvider = ({ children }) => {
 
 	// register user
 	const register = async (userObj) => {
-		console.log(
-			'🚀 -> file: AuthContext.js -> line 13 -> AuthProvider -> userObj',
-			userObj
-		);
+		try {
+			const res = await fetch(`${NEXT_URL}/api/register`, {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(userObj),
+			});
+
+			const data = await res.json();
+			if (res.ok) {
+				setUser(data.user);
+				router.push(`/account/dashboard`);
+			} else {
+				setError(data.error);
+			}
+		} catch (error) {
+			console.error('🚀 -> file: AuthContext.js -> line 22 -> register -> error', error);
+		}
 	};
 
 	// login user
